@@ -1,8 +1,10 @@
+# AAA/urls.py
+
 from django.urls import path
-from . import views
+from .views import RegisterUserView, VerifyUserView
 
 urlpatterns = [
-    path('register/', views.register_view, name='register'),
-    path('verify/', views.verify_view, name='verify'),
-    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('register/', RegisterUserView.as_view(), name='register'),
+    path('verify/', VerifyUserView.as_view(), name='verify'),
+    # ... other paths ...
 ]

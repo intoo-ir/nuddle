@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
 from nuddle.apps.AAA.usermanager import UserManager
 
 
@@ -14,7 +13,8 @@ class User(AbstractUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'phone_number'
-
     REQUIRED_FIELDS = []
-
     backend = 'nuddle.apps.AAA.backend_auth.ModelBackend'
+
+
+

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,6 +33,21 @@ AUTHENTICATION_BACKENDS = [
     'nuddle.apps.AAA.backend_auth.ModelBackend',
 ]
 
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'nuddle.apps.AAA.urls.swagger_info',
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,  # Disable session authentication
+    'JSON_EDITOR': True,
+}
+
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,11 +55,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # 'drf_yasg',
+    'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
-
+    'rest_framework.authtoken',
     'nuddle.apps.core',
     'nuddle.apps.AAA',
 
@@ -60,6 +75,22 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'nuddle.urls'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'phone_number',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+}
+
 
 TEMPLATES = [
     {
@@ -138,9 +169,15 @@ MEDIA_ROOT = '/vol/web/media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# settings.py
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
+
 Kavenegar_API = '2B50733975574D6D6868684F6747317A6E46776E4667647A7161344532656F355A6B47773551384E5059773D'

@@ -47,3 +47,15 @@ def check_otp_expiration(phone_number):
             return True
     except models.User.DoesNotExist:
         return False
+
+
+def verify_otp(phone_number, entered_otp):
+    try:
+        user = models.User.objects.get(phone_number=phone_number)
+        if not check_otp_expiration(phone_number):
+            print('OTP is expired.')
+            return False
+        return user.otp_code == entered_otp
+    except models.User.DoesNotExist:
+        print('User does not exist.')
+        return False
