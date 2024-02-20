@@ -1,2 +1,4 @@
 -r base.txt
 sentry-sdk==1.4.3
+django-admin-interface==0.28.5
+django-colorfield==0.11.0

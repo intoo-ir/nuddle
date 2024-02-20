@@ -49,9 +49,11 @@ def check_otp_expiration(phone_number):
         return False
 
 
-def verify_otp(phone_number, entered_otp):
+def verify_otp(phone_number, entered_otp, otp_creation_time):
     try:
         user = models.User.objects.get(phone_number=phone_number)
+        now = timezone.now()
+        otp_time = otp_creation_time
         if not check_otp_expiration(phone_number):
             print('OTP is expired.')
             return False

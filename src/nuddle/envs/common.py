@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -49,6 +49,8 @@ SWAGGER_SETTINGS = {
 
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'nuddle.apps.core',
     'nuddle.apps.AAA',
+    #'nuddle.apps.AAA.apps.AaaConfig',
 
 ]
 
@@ -91,11 +94,11 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'src', 'nuddle', 'apps', 'AAA', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,9 +154,14 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
-USE_TZ = True
+USE_TZ = False
+
+# Custom date/time formats
+DATE_FORMAT = 'Y/m/d'
+DATETIME_FORMAT = 'Y/m/d P'
+TIME_FORMAT = 'P'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -177,7 +185,26 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    
 }
+#for development test
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+#for production
+"""EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.your-email-provider.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@example.com'
+EMAIL_HOST_PASSWORD = 'your-email-password'"""
 
 Kavenegar_API = '2B50733975574D6D6868684F6747317A6E46776E4667647A7161344532656F355A6B47773551384E5059773D'
+
+
+# Celery Configuration
+CELERY_BROKER_URL = 'amqp://nuddle:intooAILAB@123@nuddle-rabbitmq-1:5672/'  # Update if necessary
+CELERY_RESULT_BACKEND = 'redis://nuddle-redis-1:6379/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
